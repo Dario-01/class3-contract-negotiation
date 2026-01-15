@@ -609,6 +609,74 @@
             margin-top: 10px;
             text-shadow: 0 0 8px rgba(0, 212, 255, 0.3);
         }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 25px;
+            margin-top: 30px;
+            perspective: 2000px;
+        }
+
+        .team-card {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.12), rgba(0, 128, 255, 0.06));
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transform-style: preserve-3d;
+        }
+
+        .team-card::before {
+            content: '';
+            position: absolute;
+            top: -100%;
+            left: -100%;
+            width: 300%;
+            height: 300%;
+            background: conic-gradient(from 0deg, transparent, rgba(0, 212, 255, 0.3), transparent 30%);
+            animation: rotateGradient 4s linear infinite;
+        }
+
+        @keyframes rotateGradient {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .team-card::after {
+            content: '';
+            position: absolute;
+            inset: 1px;
+            background: radial-gradient(ellipse at center, #0a0f1a 0%, #000000 100%);
+            border-radius: 11px;
+            z-index: 0;
+        }
+
+        .team-card:hover {
+            transform: translateZ(80px) rotateY(8deg) scale(1.1);
+            border-color: #00d4ff;
+            box-shadow: 0 30px 80px rgba(0, 212, 255, 0.5);
+        }
+
+        .team-name {
+            font-size: 1.5rem;
+            font-weight: 300;
+            color: #00d4ff;
+            margin-bottom: 0;
+            text-shadow: 0 0 20px rgba(0, 212, 255, 0.6);
+            position: relative;
+            z-index: 1;
+            transition: all 0.3s ease;
+        }
+
+        .team-card:hover .team-name {
+            transform: translateZ(40px) scale(1.1);
+            text-shadow: 0 0 40px rgba(0, 212, 255, 1);
+        }
     </style>
 </head>
 <body>
@@ -638,6 +706,20 @@
                     <div class="grid-item">
                         <h3>Key Dynamics</h3>
                         <p>Negotiation involves strategy, information asymmetry, and reliance. Legal systems regulate negotiations to prevent opportunistic conduct.</p>
+                    </div>
+                </div>
+                <div class="team-grid" style="margin-top: 60px;">
+                    <div class="team-card">
+                        <div class="team-name">Rayan</div>
+                    </div>
+                    <div class="team-card">
+                        <div class="team-name">Amir</div>
+                    </div>
+                    <div class="team-card">
+                        <div class="team-name">Alberto</div>
+                    </div>
+                    <div class="team-card">
+                        <div class="team-name">Chi</div>
                     </div>
                 </div>
             </div>
@@ -1040,7 +1122,7 @@
                 };
                 animateCursor();
 
-                const interactiveElements = document.querySelectorAll('.grid-item, .column-section, .slide-list li, .slide-title, .accent-text, .nav-hint, .slide-number');
+                const interactiveElements = document.querySelectorAll('.grid-item, .column-section, .slide-list li, .slide-title, .accent-text, .nav-hint, .slide-number, .team-card');
                 interactiveElements.forEach(el => {
                     el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
                     el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
@@ -1190,6 +1272,23 @@
                     
                     item.addEventListener('mouseleave', () => {
                         item.style.transform = '';
+                    });
+                });
+
+                document.querySelectorAll('.team-card').forEach(card => {
+                    card.addEventListener('mousemove', (e) => {
+                        const rect = card.getBoundingClientRect();
+                        const centerX = rect.left + rect.width / 2;
+                        const centerY = rect.top + rect.height / 2;
+                        
+                        const rotateY = ((e.clientX - centerX) / rect.width) * 30;
+                        const rotateX = -((e.clientY - centerY) / rect.height) * 30;
+                        
+                        card.style.transform = `translateZ(80px) rotateY(${rotateY}deg) rotateX(${rotateX}deg) scale(1.1)`;
+                    });
+                    
+                    card.addEventListener('mouseleave', () => {
+                        card.style.transform = '';
                     });
                 });
 
